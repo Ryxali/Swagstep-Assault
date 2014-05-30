@@ -1,7 +1,7 @@
 require "gamedata"
 require "vector"
-require "bullet"
-
+require "basicGun"
+require "triGun"
 Character = {
 	x = 0,
 	y = 0,
@@ -17,7 +17,8 @@ Character = {
 	imgSpeedMul = 1.5,
 	imgMovingX = false,
 	imgMovingY = false,
-	imgSpeed = 100
+	imgSpeed = 100,
+	weapon = triGun
 }
 
 local function resolveMovement(character, action)
@@ -33,7 +34,7 @@ local function resolveMovement(character, action)
 	elseif action == "down" then
 		character.imgMovingY = true
 		character.y = character.y + 64
-	else
+	else -- add "go power rangers"
 		GameData:addError("invalid movement input: " .. action, 3.5)
 		GameData:addError("Proper usage: 'go ' + 'left'/'right'/'up'/'down' ", 4.5)
 	end
@@ -48,8 +49,7 @@ local function resolveAction(character, action, bullets)
 	if command == "go" then
 		resolveMovement(character, string.sub(action, offset+1, -1))
 	elseif command == "fire" then
-		bullets.size = bullets.size + 1
-		bullets.bullet[bullets.size] = bullet.create(character.x, character.y, 50, 16)
+		character.weapon:fire(bullets, character.x, character.y)
 	elseif command == "help" then
 		GameData:addError("To move type: 'go ' + 'right'/'left'/'up'/'down'", 6)
 	else

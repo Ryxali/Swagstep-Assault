@@ -1,5 +1,5 @@
 bullet = {
-	x = 0,
+	--[[x = 0,
 	y = 0,
 	xSpeed = 0,
 	ySpeed = 0,
@@ -8,8 +8,8 @@ bullet = {
 	aY = 0,
 	oX = 0,
 	oY = 0,
-	speed = 1,
-	moving = false
+	speed = 2,
+	moving = false]]
 }
 
 function bullet.create(x, y, xSpeed, ySpeed)
@@ -23,13 +23,40 @@ function bullet.create(x, y, xSpeed, ySpeed)
 		aY = 0, -- anchor
 		oX = 0, -- offset
 		oY = 0,
-		speed = 1,
 		c = 0,
 		moving = false
 	}
 	b.aX = b.x
 	b.aY = b.y
 	return b
+end
+function bullet:new(x, y, xSpeed, ySpeed, behaviour)
+	assert(behaviour ~= nil)
+	local b = setmetatable(
+		{
+			x = x,
+			y = y,
+			xSpeed = xSpeed,
+			ySpeed = ySpeed,
+			img = love.graphics.newImage("bullet.png"),
+			aX = 0,
+			aY = 0, -- anchor
+			oX = 0, -- offset
+			oY = 0,
+			speed = 2,
+			c = 0,
+			moving = false,
+			
+		},
+		{
+			__index = behaviour
+		}
+		
+		)
+	b.aX = b.x
+	b.aY = b.y
+	return b
+
 end
 
 function bullet.update(this, delta)
@@ -55,7 +82,7 @@ function bullet.updateMovement(this, delta)
 
 		local factor = -(4*this.c^2*((1-this.c)/2)^2 - this.c) ---(this.c^2 - 2*this.c)
 		this.oX = xN * factor*length
-		this.oY = yN * (factor )*length  - math.cos(this.c*math.pi*2-math.pi/2)*length--math.cos(this.c*math.pi*2-math.pi/2) * length
+		this.oY = yN * (factor )*length  - math.cos(this.c*math.pi*2-math.pi/2)*8--math.cos(this.c*math.pi*2-math.pi/2) * length
 
 
 		if this.c > 1 then

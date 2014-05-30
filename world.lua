@@ -14,7 +14,6 @@ World = {
 		enemyTimer = 3
 
 	}
-	
 }
 
 function World.draw(this)
