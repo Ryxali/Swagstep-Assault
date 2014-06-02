@@ -1,12 +1,7 @@
-require("bullet")
-require("gamedata")
-wobbleBullet = {
-	
+surgeBullet = {
 }
 
-
-
-function wobbleBullet:updateMovement(bullet, delta)
+function surgeBullet:updateMovement(bullet, delta)
 
 	if bullet.moving == true then
 		bullet.c = bullet.c + delta*bullet.speed
@@ -15,9 +10,9 @@ function wobbleBullet:updateMovement(bullet, delta)
 		local yN = (bullet.y-bullet.aY) / length -- directional vector
 		
 
-		local factor = (4*bullet.c^2*((1-bullet.c)/2)^2 + bullet.c) ---(bullet.c^2 - 2*bullet.c)
+		local factor = -math.cos(math.cos((1-math.sqrt(bullet.c))/2*math.pi)*math.pi)/2 + 0.5 ---(bullet.c^2 - 2*bullet.c)
 		bullet.oX = xN * factor*length
-		bullet.oY = yN * (factor )*length - math.cos(bullet.c*math.pi*2-math.pi/2)*8-- - math.cos(bullet.c*math.pi*2-math.pi/2)*8--math.cos(bullet.c*math.pi*2-math.pi/2) * length
+		bullet.oY = yN * factor*length-- - math.cos(bullet.c*math.pi*2-math.pi/2)*8--math.cos(bullet.c*math.pi*2-math.pi/2) * length
 
 
 		if bullet.c > 1 then

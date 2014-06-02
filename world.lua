@@ -1,9 +1,10 @@
 require "gamedata"
 require "character"
 require "enemy"
+require "entity"
 World = {
 	background = love.graphics.newImage("world_bg.jpg"),
-	character = Character,
+	character = Character(),
 	bullets = {
 		bullet = {},
 		size = 0
@@ -21,7 +22,7 @@ function World.draw(this)
 	this.character:draw()
 	for i = 1, this.bullets.size, 1 do
 		if this.bullets.bullet[i] ~= nil then
-			bullet.draw(this.bullets.bullet[i])
+			this.bullets.bullet[i]:draw()
 		end
 	end
 	for i = 1, this.enemies.size, 1 do
@@ -35,7 +36,7 @@ function World.update(this, delta)
 	this.character:update(delta, this.bullets)
 	for i = 1, this.bullets.size, 1 do
 		if this.bullets.bullet[i] ~= nil then
-			bullet.update(this.bullets.bullet[i], delta)
+			this.bullets.bullet[i]:update(delta)
 		end
 	end
 	for i = 1, this.enemies.size, 1 do
@@ -52,4 +53,5 @@ end
 
 function World.load(this)
 	this.character:load()
+	y = entity()
 end

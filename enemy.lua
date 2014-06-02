@@ -1,5 +1,11 @@
-enemy = {}
+require "entity"
 
+enemy = setmetatable({},
+	{
+		__call = function(x, y)
+			local e = setmetatable({}, entity())
+		end
+	})
 function enemy.create(x, y)
 	local e = {
 		x = x,

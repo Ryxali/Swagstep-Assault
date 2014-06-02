@@ -2,54 +2,64 @@ require "gamedata"
 require "vector"
 require "basicGun"
 require "triGun"
-Character = {
-	x = 0,
-	y = 0,
-	img = love.graphics.newImage("C_def.png"),
-	imgSide = love.graphics.newImage("C_side.png"),
-	imgShift = love.graphics.newImage("C_shift.png"),
-	imgAX = 0, -- image anchor for animated movement
-	imgAY = 0, 
-	imgX = 0, 
-	imgY = 0,
-	imgCX = 0, -- image curve x
-	imgCY = 0,
-	imgSpeedMul = 1.5,
-	imgMovingX = false,
-	imgMovingY = false,
-	imgSpeed = 100,
-	weapon = triGun
-}
+Character = 
+	setmetatable({},
+ 	{
+ 		__call = function()
+ 			local c = {
+ 				x = 0,
+				y = 0,
+				img = love.graphics.newImage("C_def.png"),
+				imgSide = love.graphics.newImage("C_side.png"),
+				imgShift = love.graphics.newImage("C_shift.png"),
+				imgAX = 0, -- image anchor for animated movement
+				imgAY = 0, 
+				imgX = 0, 
+				imgY = 0,
+				imgCX = 0, -- image curve x
+				imgCY = 0,
+				imgSpeedMul = 1.5,
+				imgMovingX = false,
+				imgMovingY = false,
+				imgSpeed = 100,
+				weapon = triGun
+ 			}
+ 			c = setmetatable(c, {__index = Character})
+ 			return c
+ 		end
+ 	})
+ 
+Character.__index = Character
 
-local function resolveMovement(character, action)
+function Character:resolveMovement(action)
 	if action == "right" then
-		character.imgMovingX = true
-		character.x = character.x + 64
+		self.imgMovingX = true
+		self.x = self.x + 64
 	elseif action == "left" then
-		character.imgMovingX = true
-		character.x = character.x - 64
+		self.imgMovingX = true
+		self.x = self.x - 64
 	elseif action== "up" then
-		character.imgMovingY = true
-		character.y = character.y - 64
+		self.imgMovingY = true
+		self.y = self.y - 64
 	elseif action == "down" then
-		character.imgMovingY = true
-		character.y = character.y + 64
+		self.imgMovingY = true
+		self.y = self.y + 64
 	else -- add "go power rangers"
 		GameData:addError("invalid movement input: " .. action, 3.5)
 		GameData:addError("Proper usage: 'go ' + 'left'/'right'/'up'/'down' ", 4.5)
 	end
 end
 
-local function resolveAction(character, action, bullets)
+function Character:resolveAction(action, bullets)
 	offset = string.find(action, " ")
 	if offset == nil then
 		offset = 0
 	end
 	command = string.sub(action, 0, offset-1)
 	if command == "go" then
-		resolveMovement(character, string.sub(action, offset+1, -1))
+		self:resolveMovement(string.sub(action, offset+1, -1))
 	elseif command == "fire" then
-		character.weapon:fire(bullets, character.x, character.y)
+		self.weapon:fire(bullets, self.x, self.y)
 	elseif command == "help" then
 		GameData:addError("To move type: 'go ' + 'right'/'left'/'up'/'down'", 6)
 	else
@@ -59,53 +69,53 @@ local function resolveAction(character, action, bullets)
 
 end
 
-function Character.updateMovement(this, delta)
-	if this.imgMovingX == true then
-		this.imgCX = this.imgCX + delta*this.imgSpeedMul
-		this.imgX = -(this.imgCX^2-this.imgCX*2)*(this.x-this.imgAX)
-		if this.imgCX  > 1 then
-			this.imgCX = 0
-			this.imgMovingX = false
-			this.imgX = 0
-			this.imgAX = this.x
+function Character:updateMovement(delta)
+	if self.imgMovingX == true then
+		self.imgCX = self.imgCX + delta*self.imgSpeedMul
+		self.imgX = -(self.imgCX^2-self.imgCX*2)*(self.x-self.imgAX)
+		if self.imgCX  > 1 then
+			self.imgCX = 0
+			self.imgMovingX = false
+			self.imgX = 0
+			self.imgAX = self.x
 		end
 
 	end
-	if this.imgMovingY == true then
-		this.imgCY = this.imgCY + delta*this.imgSpeedMul
-		--this.imgY = -(this.imgCY^3-this.imgCY*2)*(this.y-this.imgAY)
-		local exp = (this.y-this.imgAY)
-		--this.imgY = -((math.cos(this.imgCY)*exp))
-		this.imgY = -(((math.cos(this.imgCY*math.pi*2)/2-1/2)-this.imgCY)*exp)
-		if this.imgCY > 1 then
-			this.imgCY = 0
-			this.imgMovingY = false
-			this.imgY = 0
-			this.imgAY = this.y
+	if self.imgMovingY == true then
+		self.imgCY = self.imgCY + delta*self.imgSpeedMul
+		--self.imgY = -(self.imgCY^3-self.imgCY*2)*(self.y-self.imgAY)
+		local exp = (self.y-self.imgAY)
+		--self.imgY = -((math.cos(self.imgCY)*exp))
+		self.imgY = -(((math.cos(self.imgCY*math.pi*2)/2-1/2)-self.imgCY)*exp)
+		if self.imgCY > 1 then
+			self.imgCY = 0
+			self.imgMovingY = false
+			self.imgY = 0
+			self.imgAY = self.y
 		end
 
 	end
 end
 
-function Character.update(this, delta, bullets)
+function Character:update(delta, bullets)
 	for i = 1, GameData.Event.actions.numActions, 1 do
 		if GameData.Event.actions.action[i].code == "input" then
-			resolveAction(this, GameData.Event.actions.action[i].data, bullets)
+			self:resolveAction(GameData.Event.actions.action[i].data, bullets)
 		end
 	end
-	this.updateMovement(this, delta)
+	self.updateMovement(self, delta)
 end
 
-function Character.draw(this)
-	if this.imgMovingX then
-		love.graphics.draw(this.imgSide, this.imgAX + this.imgX, this.imgAY + this.imgY)
-	elseif this.imgMovingY then
-		love.graphics.draw(this.imgShift, this.imgAX + this.imgX, this.imgAY + this.imgY)
+function Character:draw()
+	if self.imgMovingX then
+		love.graphics.draw(self.imgSide, self.imgAX + self.imgX, self.imgAY + self.imgY)
+	elseif self.imgMovingY then
+		love.graphics.draw(self.imgShift, self.imgAX + self.imgX, self.imgAY + self.imgY)
 	else
-		love.graphics.draw(this.img, this.imgAX + this.imgX, this.imgAY + this.imgY)
+		love.graphics.draw(self.img, self.imgAX + self.imgX, self.imgAY + self.imgY)
 	end
 end
 
-function Character.load(this)
+function Character:load()
 	
 end
