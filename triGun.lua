@@ -17,9 +17,9 @@ function triGun.fire(this, bullets, x, y)
 	v0 = v0 * 96
 	v1 = v1 * 96
 	bullets.size = bullets.size + 1
-	bullets.bullet[bullets.size] = bullet(x, y+32, v0.x, v0.y, smoothBullet, stretchingBullet)
+	bullets.bullet[bullets.size] = bullet(x, y+32, v0.x, v0.y, surgeBullet, stretchingBullet)
 	bullets.size = bullets.size + 1
-	bullets.bullet[bullets.size] = bullet(x, y, 96, 0, surgeBullet, spiralBullet)
+	bullets.bullet[bullets.size] = bullet(x, y, 96, 0, wobbleBullet, spiralBullet)
 	bullets.size = bullets.size + 1
-	bullets.bullet[bullets.size] = bullet(x, y-32, v1.x, v1.y, smoothBullet, stretchingBullet)
+	bullets.bullet[bullets.size] = bullet(x, y-32, v1.x, v1.y, surgeBullet, stretchingBullet)
 end

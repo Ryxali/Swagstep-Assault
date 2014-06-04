@@ -22,6 +22,7 @@ function love.load()
             
         }
     ]]
+    
 	World:load()
 	cmdLine.active = true
 end
@@ -36,7 +37,7 @@ function love.draw()
 		
 	end
 	love.graphics.print(tostring(cmdLine.curKey), 400, 400)	GameData:draw()
-	love.graphics.setShader(effect)
+	--love.graphics.setShader(effect)
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode('premultiplied')
 	love.graphics.draw(canvas)
