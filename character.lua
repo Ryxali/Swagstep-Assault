@@ -2,27 +2,31 @@ require "gamedata"
 require "vector"
 require "basicGun"
 require "triGun"
+require "movementPatterns"
+require "shaderImage"
 Character = 
 	setmetatable({},
  	{
  		__call = function()
  			local c = {
- 				x = 0,
-				y = 0,
 				img = love.graphics.newImage("C_def.png"),
 				imgSide = love.graphics.newImage("C_side.png"),
 				imgShift = love.graphics.newImage("C_shift.png"),
-				imgAX = 0, -- image anchor for animated movement
-				imgAY = 0, 
-				imgX = 0, 
-				imgY = 0,
-				imgCX = 0, -- image curve x
-				imgCY = 0,
-				imgSpeedMul = 1.5,
-				imgMovingX = false,
-				imgMovingY = false,
-				imgSpeed = 100,
-				weapon = triGun
+				x = 0,
+				y = 0,
+				xSpeed = 64,
+				ySpeed = 64,
+				img = love.graphics.newImage("bullet.png"),
+				aX = 0,
+				aY = 0, -- anchor
+				oX = 0, -- offset
+				oY = 0,
+				c = 0,
+				moving = false,
+				speed = 1.5,
+				move = movePatterns.smoothFunction,
+				weapon = triGun,
+				visual = shaderImage.oddishShader
  			}
  			c = setmetatable(c, {__index = Character})
  			return c
@@ -33,16 +37,16 @@ Character.__index = Character
 
 function Character:resolveMovement(action)
 	if action == "right" then
-		self.imgMovingX = true
+		self.moving = true
 		self.x = self.x + 64
 	elseif action == "left" then
-		self.imgMovingX = true
+		self.moving = true
 		self.x = self.x - 64
 	elseif action== "up" then
-		self.imgMovingY = true
+		self.moving = true
 		self.y = self.y - 64
 	elseif action == "down" then
-		self.imgMovingY = true
+		self.moving = true
 		self.y = self.y + 64
 	else -- add "go power rangers"
 		GameData:addError("invalid movement input: " .. action, 3.5)
@@ -103,17 +107,19 @@ function Character:update(delta, bullets)
 			self:resolveAction(GameData.Event.actions.action[i].data, bullets)
 		end
 	end
-	self.updateMovement(self, delta)
+	self.move(self, delta)
 end
 
 function Character:draw()
-	if self.imgMovingX then
+	self.visual:draw(self)
+
+	--[[if self.imgMovingX then
 		love.graphics.draw(self.imgSide, self.imgAX + self.imgX, self.imgAY + self.imgY)
 	elseif self.imgMovingY then
 		love.graphics.draw(self.imgShift, self.imgAX + self.imgX, self.imgAY + self.imgY)
 	else
 		love.graphics.draw(self.img, self.imgAX + self.imgX, self.imgAY + self.imgY)
-	end
+	end]]
 end
 
 function Character:load()
