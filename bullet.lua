@@ -2,11 +2,9 @@ bullet = {
 }
 bullet.__index = bullet
 
-function bullet.new(x, y, xSpeed, ySpeed, behaviour, visual)
-	assert(behaviour ~= nil)
-	visual = visual or behaviour
+function bullet.new(x, y, xSpeed, ySpeed, move, visual)
+	assert(move ~= nil)
 	assert(visual.draw ~= nil)
-	assert(behaviour.updateMovement ~= nil)
 	local b = setmetatable(
 		{
 			x = x,
@@ -20,20 +18,20 @@ function bullet.new(x, y, xSpeed, ySpeed, behaviour, visual)
 			oY = 0,
 			c = 0,
 			moving = false,
-			speed = 1.5
+			speed = 1.5,
+			move = move
 		},
 		bullet
 		)
 	b.aX = b.x
 	b.aY = b.y
-	b.behaviour = setmetatable(behaviour, b)
 	b.visual = setmetatable(visual, b)
 	return b
 
 end
 
---[[function bullet.__call(x, y, xSpeed, ySpeed, behaviour)
-	assert(behaviour ~= nil)
+--[[function bullet.__call(x, y, xSpeed, ySpeed, move)
+	assert(move ~= nil)
 	local b = setmetatable(
 		{
 			x = x,
@@ -51,7 +49,7 @@ end
 			
 		},
 		{
-			__index = behaviour
+			__index = move
 		}
 		
 		)
@@ -66,7 +64,7 @@ function bullet:update(delta)
 		self.y = self.y + self.ySpeed
 		self.moving = true
 	end
-	self.behaviour:updateMovement(self, delta)
+	self.move(self, delta)
 end
 
 function bullet:draw()

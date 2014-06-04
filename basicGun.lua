@@ -1,5 +1,5 @@
 require "bullet"
-require "wobbleBullet"
+require "movementPatterns"
 
 basicGun = {
 	
