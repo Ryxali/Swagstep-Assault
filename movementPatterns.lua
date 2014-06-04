@@ -74,3 +74,15 @@ function movePatterns.surgeFunction(object, delta)
 		end
 	end
 end
+
+function movePatterns.randomFunction()
+	local i = math.random(3)
+	if i == 1 then
+		return movePatterns.wobbleFunction
+	elseif i == 2 then
+		return movePatterns.smoothFunction
+	elseif i == 3 then
+		return movePatterns.surgeFunction
+	end
+	return nil
+end
