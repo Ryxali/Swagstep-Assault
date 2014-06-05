@@ -140,7 +140,7 @@ World = {
             outCol = mix(outCol, snow, step(mountainTop*0.8, 1-texture_coords.y));
             float blend = smoothstep(mountainTop, mountainTop+0.01, 1-texture_coords.y);
 
-            x = time+11+texture_coords.x*1.2;
+            x = time*0.5+11+texture_coords.x*2;
             mountainTop = 1-min(abs(cos(x*3.14/2)),min(abs(cos(x*3.14/2-0.3))+0.1, abs(cos(x*3.14/2+0.3))+0.1))-0.2;
             //mountainTop = ((sin(x*3.14/5)*2+cos(x*3.14*6)*0.1+(cos(x*3.14)*cos(x*3.14)))+1)*sin(x*3.14/9)*sin(x*3.14/9)/6+0.1;
             //mountainTop2 = clamp(mountainTop2, smoothstep(0.05, 0.1, mountainTop)/20+0.15, 10.0);
@@ -152,7 +152,7 @@ World = {
             float blend2 = smoothstep(mountainTop, mountainTop+0.01, 1-texture_coords.y);
 
         
-            x = time+26 +texture_coords.x*1.4;
+            x = time*0.4+26 +texture_coords.x*2;
             x += cnoise(vec2(x, 0))/4;
 
             mountainTop = 1-min(abs(cos(x*3.14/2)),min(abs(cos(x*3.14/2-0.3))+0.1, abs(cos(x*3.14/2+0.3))+0.1));
