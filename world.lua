@@ -2,19 +2,17 @@ require "gamedata"
 require "character"
 require "enemy"
 require "entity"
+require "List"
 World = {
 	background = love.graphics.newImage("world_bg.jpg"),
 	character = Character(),
-	bullets = {
-		bullet = {},
-		size = 0
-	},
+	bullets = List(),
 	enemies = {
-		enemy = {},
-		size = 0,
+		enemies = List(),
 		enemyTimer = 3
 
 	},
+	enemyBullets = List(),
 	shader = love.graphics.newShader [[
 		extern number time;
         vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
@@ -311,34 +309,35 @@ function World.draw(this)
 	love.graphics.draw(this.canvas, this.quad, 0, 0)
 	love.graphics.setShader()
 	this.character:draw()
-	for i = 1, this.bullets.size, 1 do
-		if this.bullets.bullet[i] ~= nil then
-			this.bullets.bullet[i]:draw()
-		end
+
+	while this.enemies.enemies:next() do
+		this.enemies.enemies.iterator:draw()
 	end
-	for i = 1, this.enemies.size, 1 do
-		if this.enemies.enemy[i] ~= nil then
-			enemy.draw(this.enemies.enemy[i])
-		end
+	while this.bullets:next() do
+		this.bullets.iterator:draw()
 	end
 end
 
 function World.update(this, delta)
 	this.character:update(delta, this.bullets)
-	for i = 1, this.bullets.size, 1 do
-		if this.bullets.bullet[i] ~= nil then
-			this.bullets.bullet[i]:update(delta)
+	while this.bullets:next() do
+		if this.bullets.iterator.dying then
+			this.bullets:remove(this.bullets.iteratorAt)
+		else
+			this.bullets.iterator:update(delta, this.enemies.enemies)
 		end
 	end
-	for i = 1, this.enemies.size, 1 do
-		if this.enemies.enemy[i] ~= nil then
-			enemy.update(this.enemies.enemy[i], delta)
+	while this.enemies.enemies:next() do
+		this.enemies.enemies.iterator:update(delta)
+		if this.enemies.enemies.iterator.dying then
+			this.enemies.enemies:remove(this.enemies.enemies.iteratorAt)
+		else
+			this.enemies.enemies.iterator:update(delta, this.enemies.enemies)
 		end
 	end
 	if this.enemies.enemyTimer < GameData.timeElapsed then
 		this.enemies.enemyTimer = this.enemies.enemyTimer + 1.4
-		this.enemies.size = this.enemies.size + 1
-		this.enemies.enemy[this.enemies.size] = enemy.create(300, 100)
+		this.enemies.enemies:add(enemy(300, 100))
 	end
 end
 

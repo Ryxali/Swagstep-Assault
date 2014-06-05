@@ -13,10 +13,7 @@ function triGun.fire(this, bullets, x, y)
 	v1:normalize()
 	v0 = v0 * 96
 	v1 = v1 * 96
-	bullets.size = bullets.size + 1
-	bullets.bullet[bullets.size] = bullet(x, y+32, v0.x, v0.y, movePatterns.randomFunction(), shaderImage.spiralShader)
-	bullets.size = bullets.size + 1
-	bullets.bullet[bullets.size] = bullet(x, y, 96, 0, movePatterns.randomFunction(), shaderImage.stretchingShader)
-	bullets.size = bullets.size + 1
-	bullets.bullet[bullets.size] = bullet(x, y-32, v1.x, v1.y, movePatterns.randomFunction(), shaderImage.spiralShader)
+	bullets:add(bullet(x, y+32, v0.x, v0.y, movePatterns.randomFunction(), shaderImage.spiralShader))
+	bullets:add(bullet(x, y, 96, 0, movePatterns.randomFunction(), shaderImage.stretchingShader))
+	bullets:add(bullet(x, y-32, v1.x, v1.y, movePatterns.randomFunction(), shaderImage.spiralShader))
 end

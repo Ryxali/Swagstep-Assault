@@ -4,6 +4,7 @@ require "basicGun"
 require "triGun"
 require "movementPatterns"
 require "shaderImage"
+require "hitbox"
 Character = 
 	setmetatable({},
  	{

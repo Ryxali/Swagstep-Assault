@@ -1,6 +1,7 @@
 require "gamedata"
 require "world"
 require "vector"
+require "List"
 
 cmdLine = {
 	line = "",
@@ -9,6 +10,9 @@ cmdLine = {
 }
 
 function love.load()
+	--love.graphics.print("Swagstep Assault", GameData.WINDOW_SIZE.x, GameData.WINDOW_SIZE.y)
+	love.window.setTitle("Swagstep Assault")
+	love.window.setMode(GameData.WINDOW_SIZE.x, GameData.WINDOW_SIZE.y, GameData.flags)
 	canvas = love.graphics.newCanvas(800, 600)
 	love.graphics.setCanvas(canvas)
 	effect = love.graphics.newShader [[
@@ -22,7 +26,6 @@ function love.load()
             
         }
     ]]
-    
 	World:load()
 	cmdLine.active = true
 end
@@ -36,12 +39,15 @@ function love.draw()
 		love.graphics.print(tostring(cmdLine.line), 400, 350)
 		
 	end
-	love.graphics.print(tostring(cmdLine.curKey), 400, 400)	GameData:draw()
+	love.graphics.print(tostring(cmdLine.curKey), 400, 400)
+	GameData:draw()
+	
 	--love.graphics.setShader(effect)
 	love.graphics.setCanvas()
 	love.graphics.setBlendMode('premultiplied')
 	love.graphics.draw(canvas)
 	love.graphics.setShader()
+	
 	
 end
 

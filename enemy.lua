@@ -1,24 +1,31 @@
-require "entity"
+require "hitbox"
+enemy = {
+	
+}
+enemy.__index = enemy
 
-enemy = setmetatable({},
-	{
-		__call = function(x, y)
-			local e = setmetatable({}, entity())
-		end
-	})
-function enemy.create(x, y)
-	local e = {
-		x = x,
-		y = y,
-		img = love.graphics.newImage("enemy.png")
-	}
+function enemy.new(x, y)
+	local e = 
+		setmetatable(
+		{
+			x = x,
+			y = y,
+			img = love.graphics.newImage("enemy.png"),
+			hitbox = hitbox(x, y, 32),
+			dying = false
+		},
+		enemy)
 	return e
 end
 
-function enemy.update(this, delta)
-	this.x = this.x - 100*delta
+function enemy:update(delta)
+	self.x = self.x - 100*delta
+	self.hitbox.pos.x = self.x
+	self.hitbox.pos.y = self.y
 end
 
-function enemy.draw(this)
-	love.graphics.draw(this.img, this.x, this.y)
+function enemy:draw()
+	love.graphics.draw(self.img, self.x, self.y)
 end
+
+setmetatable(enemy, { __call = function(_, ...) return enemy.new(...) end })

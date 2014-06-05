@@ -20,6 +20,25 @@ GameData = {
 			numActions = 0
 		}
 	},
+	WINDOW_SIZE = {
+		x = 800,
+		y = 600
+	},
+	flags = {
+		fullscreen = false,
+		fullscreentype = "normal",
+		vsync = true,
+		fsaa = 0, -- antialias samples
+		resizable = false,
+		borderless = false,
+		centered = true,
+		display = 1,
+		minwidth = 1,
+		minheight = 1,
+		highdpi = false,
+		srgb = false
+
+	},
 	timeElapsed = 0
 }
 
